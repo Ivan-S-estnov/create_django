@@ -1,6 +1,19 @@
 from django.db import models
 
 
+class NewModel(models.Model):
+    name = models.CharField(max_length=300, verbose_name="заголовок")
+    description = models.TextField(verbose_name="содержимое")
+    photo = models.ImageField(upload_to="newmodel/photo", verbose_name="Превью", blank=True, null=True)
+    created_at = models.DateTimeField(verbose_name="дата создания", auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name="признак публикации", auto_now=True)
+    views_counter = models.PositiveIntegerField(verbose_name='количество просмотров', default=0)
+
+
+    def __str__(self):
+        return self.name
+
+
 class Product(models.Model):
     name = models.CharField(max_length=200, verbose_name="наименование продукта")
     description = models.TextField(verbose_name="описание продукта", blank=True, null=True)
@@ -14,8 +27,8 @@ class Product(models.Model):
         related_name="products",
     )
     price = models.IntegerField(verbose_name="цена за покупку")
-    created_at = models.DateField(verbose_name="дата создания", blank=True, null=True)
-    updated_at = models.DateField(verbose_name="дата последнего изменения", blank=True, null=True)
+    created_at = models.DateTimeField(verbose_name="дата создания", auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(verbose_name="дата последнего изменения", auto_now=True, blank=True, null=True)
 
     class Meta:
         verbose_name = "Продукт"
