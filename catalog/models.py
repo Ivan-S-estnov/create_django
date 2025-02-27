@@ -9,6 +9,10 @@ class NewModel(models.Model):
     updated_at = models.DateTimeField(verbose_name="признак публикации", auto_now=True)
     views_counter = models.PositiveIntegerField(verbose_name='количество просмотров', default=0)
 
+    class Meta:
+        verbose_name = "Модель"
+        verbose_name_plural = "Модели"
+
 
     def __str__(self):
         return self.name
@@ -29,6 +33,7 @@ class Product(models.Model):
     price = models.IntegerField(verbose_name="цена за покупку")
     created_at = models.DateTimeField(verbose_name="дата создания", auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(verbose_name="дата последнего изменения", auto_now=True, blank=True, null=True)
+    views_counter = models.PositiveIntegerField(verbose_name='количество просмотров', default=0)
 
     class Meta:
         verbose_name = "Продукт"
