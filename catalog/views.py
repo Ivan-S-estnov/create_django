@@ -9,7 +9,7 @@ from catalog.models import Product, NewModel
 
 class NewModelCreateView(CreateView):
     model = NewModel
-    fields = ["name", "description"]
+    fields = ["name", "description", "photo"]
     template_name = "catalog/newmodel_form.html"
     success_url = reverse_lazy("catalog:newmodel_list")
 
@@ -18,8 +18,6 @@ class NewModelListView(ListView):
     model = NewModel
     template_name = "catalog/newmodel_list.html"
     context_object_name = "newmodels"
-
-
 
 
 class NewModelDetailView(DetailView):
@@ -36,7 +34,7 @@ class NewModelDetailView(DetailView):
 
 class NewModelUpdateView(UpdateView):
     model = NewModel
-    fields = ["name", "description"]
+    fields = ["name", "description", "photo"]
     template_name = "catalog/newmodel_form.html"
     success_url = reverse_lazy("catalog:newmodel_list")
 
@@ -62,13 +60,38 @@ def contacts(request):
     return render(request, "contacts.html")
 
 
-def products_list(request):
-    products = Product.objects.all()
-    context = {"products": products}
-    return render(request, "product_list.html", context)
+class ProductCreateView(CreateView):
+    model = Product
+    fields = ["name", "description", "price"]
+    template_name = "catalog/product_form.html"
+    success_url = reverse_lazy("catalog:products_list")
 
+class ProductListView(ListView):
+    model = Product
+    template_name = "catalog/product_list.html"
+    context_object_name = "products"
 
-def product_detail(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-    context = {"product": product}
-    return render(request, "product_detail.html", context)
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = "catalog/product_detail.html"
+    context_object_name = "product"
+
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        self.object.views_counter += 1
+        self.object.save()
+        return self.object
+
+class ProductUpdateView(UpdateView):
+    model = Product
+    fields = ["name", "description", "price"]
+    template_name = "catalog/product_form.html"
+    success_url = reverse_lazy("catalog:product_list")
+
+    def get_success_url(self):
+        return reverse("catalog:product_detail", args=[self.kwargs.get("pk")])
+
+class ProductDeleteView(DeleteView):
+    model = Product
+    template_name = "catalog/product_confirm_delete.html"
+    success_url = reverse_lazy("catalog:products_list")
