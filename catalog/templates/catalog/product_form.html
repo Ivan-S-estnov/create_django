@@ -17,6 +17,7 @@
         <div class="card">
           <div class="card-body">
               {% csrf_token %}
+              {{ form.non_field_errors }}
               {{ form.as_p }}
               <button type="submit" class="btn btn-outline-primary">
                 {% if object %}
