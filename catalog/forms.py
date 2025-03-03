@@ -1,7 +1,10 @@
-from django.forms import ModelForm, BooleanField
+from django.forms import ModelForm, BooleanField, forms
 from django.core.exceptions import ValidationError
 
 from catalog.models import Product
+
+
+taboo_words = ['казино', 'криптовалюта', 'крипта', 'биржа', 'дешево', 'бесплатно', 'обман', 'полиция', 'радар']
 
 
 class StyleFormMixin:
@@ -26,18 +29,16 @@ class CatalogForm(StyleFormMixin, ModelForm):
         return price
 
     def clean_name(self):
-        taboo_words = ['казино', 'криптовалюта', 'крипта', 'биржа', 'дешево', 'бесплатно', 'обман', 'полиция', 'радар']
         name = self.cleaned_data.get('name')
         for word in taboo_words:
             if word in name.lower():
-                raise ValidationError ('Это запрещенные слова, которые нельзя использовать в названиях и описаниях продуктов')
+                raise ValidationError ('Это запрещенные слова, которые нельзя использовать в названиях продуктов')
         return name
 
 
     def clean_description(self):
-        taboo_words = ['казино', 'криптовалюта', 'крипта', 'биржа', 'дешево', 'бесплатно', 'обман', 'полиция', 'радар']
         description = self.cleaned_data.get('description')
         for word in taboo_words:
             if word in description.lower():
-                raise ValidationError ('Это запрещенные слова, которые нельзя использовать в названиях и описаниях продуктов')
+                raise ValidationError ('Это запрещенные слова, которые нельзя использовать в описаниях продуктов')
         return description
