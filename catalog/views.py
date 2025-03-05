@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 from catalog.forms import CatalogForm
 from catalog.models import Product
@@ -20,7 +22,7 @@ def contacts(request):
     return render(request, "contacts.html")
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = CatalogForm
     template_name = "catalog/product_form.html"
@@ -42,7 +44,7 @@ class ProductDetailView(DetailView):
         self.object.save()
         return self.object
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = CatalogForm
     template_name = "catalog/product_form.html"
@@ -51,7 +53,7 @@ class ProductUpdateView(UpdateView):
     def get_success_url(self):
         return reverse("catalog:product_detail", args=[self.kwargs.get("pk")])
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
     template_name = "catalog/product_confirm_delete.html"
     success_url = reverse_lazy("catalog:products_list")
